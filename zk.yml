@@ -1,4 +1,5 @@
 - hosts:
+    - adco-eoc-fs-1
     - adco-eoc-fs-2
   become: yes
   become_user: root
