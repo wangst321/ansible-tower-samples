@@ -1,0 +1,6 @@
+---
+
+- name: Restart ZooKeeper
+  supervisorctl:
+    name: zookeeper
+    state: restarted

@@ -1,0 +1,17 @@
+[program:zookeeper]
+command={{ zookeeper_inst_dir }}/zookeeper-{{ zookeeper_version }}/bin/zkServer.sh start-foreground
+startsecs=3
+startretries=3
+stopsignal=QUIT
+stopasgroup=true
+stopwaitsecs=10
+directory={{ zookeeper_inst_dir }}
+user={{ zookeeper_supervisord_user }}
+redirect_stderr=true
+stdout_logfile={{ zookeeper_supervisord_logfile_dir }}/running.log
+stdout_logfile_maxbytes={{ zookeeper_supervisord_logfile_maxbytes }}
+stdout_logfile_backups={{ zookeeper_supervisord_logfile_backups }}
+stderr_logfile={{ zookeeper_supervisord_logfile_dir }}/error.log
+stderr_logfile_maxbytes={{ zookeeper_supervisord_logfile_maxbytes }}
+stderr_logfile_backups={{ zookeeper_supervisord_logfile_backups }}
+environment=SINCEDB_DIR='{{ zookeeper_inst_dir }}', HOME='{{ zookeeper_inst_dir }}'

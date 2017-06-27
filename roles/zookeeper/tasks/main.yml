@@ -1,0 +1,46 @@
+---
+
+- name: ZooKeeper | Make sure the directories of installation and runtime exist
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ zookeeper_inst_dir }}"
+    - "{{ zookeeper_data_dir }}"
+    - "{{ zookeeper_log_dir }}"
+    - "{{ zookeeper_supervisord_dir }}"
+    - "{{ zookeeper_supervisord_logfile_dir }}"
+
+- name: ZooKeeper | Make sure the source tarball is downloaded and unarchived
+  unarchive:
+    src: "{{ zookeeper_download_url }}"
+    dest: "{{ zookeeper_inst_dir }}"
+    creates: "{{ zookeeper_inst_dir }}/zookeeper-{{ zookeeper_version }}"
+    remote_src: yes
+
+- name: ZooKeeper | Make sure the instance is configured
+  template:
+    src: "{{ item.file }}.j2"
+    dest: "{{ item.dest }}/{{ item.file }}"
+  with_items:
+    - file: "zoo.cfg"
+      dest: "{{ zookeeper_inst_dir }}/zookeeper-{{ zookeeper_version }}/conf"
+    - file: "java.env"
+      dest: "{{ zookeeper_inst_dir }}/zookeeper-{{ zookeeper_version }}/conf"
+    - file: "myid"
+      dest: "{{ zookeeper_data_dir }}"
+    - file: "zookeeper.ini"
+      dest: "{{ zookeeper_supervisord_dir }}"
+  notify:
+    - Restart ZooKeeper
+
+- name: ZooKeeper | Make sure the legacy service is stopped
+  command: "{{ zookeeper_inst_dir }}/zookeeper-{{ zookeeper_version }}/bin/zkServer.sh stop"
+  args:
+    chdir: "{{ zookeeper_log_dir }}"
+    removes: "{{ zookeeper_data_dir }}/zookeeper_server.pid"
+
+- name: ZooKeeper | Make sure the instance is started
+  supervisorctl:
+    name: zookeeper
+    state: present

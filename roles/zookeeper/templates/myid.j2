@@ -1,0 +1,7 @@
+{%- for s in zookeeper_servers if s.hostname == inventory_hostname -%}
+{{ s.id }}
+{%- else -%}
+{%- for s in zookeeper_observers if s.hostname == inventory_hostname -%}
+{{ s.id }}
+{%- endfor -%}
+{%- endfor -%}

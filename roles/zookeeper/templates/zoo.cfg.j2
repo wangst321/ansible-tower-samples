@@ -1,0 +1,22 @@
+# This file is managed by Ansible, all changes will be lost.
+
+tickTime={{ zookeeper_tick_time }}
+initLimit={{ zookeeper_init_limit }}
+syncLimit={{ zookeeper_sync_limit }}
+dataDir={{ zookeeper_data_dir }}
+dataLogDir={{ zookeeper_log_dir }}
+clientPort={{ zookeeper_client_port }}
+maxClientCnxns={{ zookeeper_max_client_cnxns }}
+{% if zookeeper_autopurge %}
+autopurge.snapRetainCount={{ zookeeper_autopurge.snapshot_retain_count | default('100') }}
+autopurge.purgeInterval={{ zookeeper_autopurge.interval | default('1') }}
+{% endif %}
+{% for s in zookeeper_observers if s.hostname == inventory_hostname %}
+peerType=observer
+{% endfor %}
+{% for s in zookeeper_servers %}
+server.{{ s.id }}={{ s.hostaddr }}:{{ zookeeper_gossip_port | join(':') }}
+{% endfor %}
+{% for s in zookeeper_observers %}
+server.{{ s.id }}={{ s.hostaddr }}:{{ zookeeper_gossip_port | join(':') }}:observer
+{% endfor %}

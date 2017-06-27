@@ -1,0 +1,42 @@
+---
+
+zookeeper_version: "3.4.9"
+zookeeper_mirror_url: "http://ftp.cuhk.edu.hk/pub/packages/apache.org/zookeeper"
+zookeeper_download_url: "{{ zookeeper_mirror_url }}/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
+
+zookeeper_supervisord_dir: "/etc/supervisord.d"
+zookeeper_supervisord_user: "root"
+zookeeper_supervisord_logfile_dir: "/data/log/zookeeper"
+zookeeper_supervisord_logfile_maxbytes: "50MB"
+zookeeper_supervisord_logfile_backups: "5"
+
+zookeeper_inst_dir: "/data/zookeeper"
+zookeeper_data_dir: "/data/zookeeper/data"
+zookeeper_log_dir: "/data/zookeeper/log"
+
+zookeeper_server_jvmflags:
+  - "-XX:+PrintGCDetails"
+  - "-Xloggc:{zookeeper_log_dir}/gc.log"
+  - "-XX:+PrintGCDateStamps"
+  - "-Dcom.sun.management.jmxremote"
+  - "-Dcom.sun.management.jmxremote.authenticate=false"
+  - "-Dcom.sun.management.jmxremote.ssl=false"
+  - "-Dcom.sun.management.jmxremote.port=10826"
+  - "-XX:+UseG1GC"
+  - "-XX:MaxGCPauseMillis=100"
+zookeeper_client_jvmflags: []
+
+zookeeper_client_port: 2181
+zookeeper_gossip_port: [3888, 4888]
+zookeeper_tick_time: 5000
+zookeeper_init_limit: 10
+zookeeper_sync_limit: 5
+zookeeper_max_client_cnxns: 120
+zookeeper_autopurge:
+  snapshot_retain_count: 100
+  interval: 1
+zookeeper_servers:
+  - id: 1
+    hostname: "{{ inventory_hostname }}"
+    hostaddr: "127.0.0.1"
+zookeeper_observers: []

@@ -1,0 +1,27 @@
+- hosts:
+    - adco-eoc-fs-2
+  become: yes
+  become_user: root
+  roles:
+    - zookeeper
+  vars:
+    zookeeper_servers:
+      - id: 1
+        hostname: "zk-1"
+        hostaddr: "192.168.100.19"
+      - id: 2
+        hostname: "zk-2"
+        hostaddr: "192.168.100.20"
+      - id: 3
+        hostname: "zk-3"
+        hostaddr: "192.168.100.21"
+    zookeeper_observers:
+      - id: 4
+        hostname: "zk-ob1"
+        hostaddr: "192.168.100.111"
+      - id: 5
+        hostname: "zk-ob2"
+        hostaddr: "192.168.100.112"
+      - id: 6
+        hostname: "zk-ob3"
+        hostaddr: "192.168.100.113"
